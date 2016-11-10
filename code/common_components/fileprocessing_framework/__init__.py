@@ -1,7 +1,7 @@
 # Version 5.3
 
 # - getfolderlisting fixed
-# - concatenatepaths added
+# - concatenatepaths, doesexist added
 
 # ====================================================================================
 # Version 5.2

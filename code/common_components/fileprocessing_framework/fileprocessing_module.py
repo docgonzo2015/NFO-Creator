@@ -101,3 +101,13 @@ def getfolderlisting(folderpath):
 def concatenatepaths(path1, path2):
 
 	return OperatingSystem.path.join(path1, path2)
+
+
+
+# ---------------------------------------------
+# Returns whether a path (file or folder) exists
+# ---------------------------------------------
+
+def doesexist(fullpath):
+
+	return OperatingSystem.path.exists(fullpath)
