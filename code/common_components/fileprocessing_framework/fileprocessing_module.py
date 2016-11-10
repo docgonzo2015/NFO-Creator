@@ -78,9 +78,10 @@ def getfolderlisting(folderpath):
 		listing = OperatingSystem.listdir(folderpath)
 
 		for listitem in listing:
-			if OperatingSystem.path.isfile(listitem) == True:
+			fullitempath = OperatingSystem.path.join(folderpath, listitem)
+			if OperatingSystem.path.isfile(fullitempath) == True:
 				itemtype = "File"
-			elif OperatingSystem.path.isdir(listitem) == True:
+			elif OperatingSystem.path.isdir(fullitempath) == True:
 				itemtype = "Folder"
 			else:
 				itemtype = "Unknown"
@@ -90,3 +91,13 @@ def getfolderlisting(folderpath):
 		print "Cannot access folder - ", folderpath
 
 	return outcome
+
+
+
+# ---------------------------------------------
+# Returns a path based on a root and a subitem
+# ---------------------------------------------
+
+def concatenatepaths(path1, path2):
+
+	return OperatingSystem.path.join(path1, path2)
