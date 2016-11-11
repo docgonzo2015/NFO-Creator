@@ -1,11 +1,13 @@
 from common_components.fileprocessing_framework import fileprocessing_module as File
-from . import filename_functions as FileName
-from . import indexfile_functions as IndexFile
+from . import filename_methods as FileName
+from . import indexfile_methods as IndexFile
 from . import nfooutput_methods as FileOutput
 
 
 def runapplication(rootfolderpath):
 
+
+	print "==========================================="
 
 	rootfilelist = File.getfolderlisting(rootfolderpath)
 
@@ -17,8 +19,8 @@ def runapplication(rootfolderpath):
 			nfocount = processsubfolder(rootfolderpath, rootitemname, "", "", nfocount)
 
 	print "==========================================="
-	print "NFOs Created: ", nfocount
-
+	print str(nfocount) + " NFOs processed"
+	print "==========================================="
 
 
 
