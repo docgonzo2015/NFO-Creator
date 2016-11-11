@@ -1,62 +1,92 @@
-#from common_components.userinterface_framework import userinterface_module as GUI
 from common_components.fileprocessing_framework import fileprocessing_module as File
+from . import filename_functions as FileName
+from . import indexfile_functions as IndexFile
+from . import nfooutput_methods as FileOutput
 
 
 def runapplication(rootfolderpath):
 
-	#GUI.init()
 
 	rootfilelist = File.getfolderlisting(rootfolderpath)
+
+	nfocount = 0
 
 	for rootitemname in rootfilelist.keys():
 
 		if rootfilelist[rootitemname] == "Folder":
+			nfocount = processsubfolder(rootfolderpath, rootitemname, "", "", nfocount)
 
-			topfolderpath = File.concatenatepaths(rootfolderpath, rootitemname)
-
-			print topfolderpath
-
-			topfilelist = File.getfolderlisting(topfolderpath)
-
-			processfilepath = File.concatenatepaths(topfolderpath, "index.setinfo")
-			processflag = File.doesexist(processfilepath)
-			multimovieflag = File.doesexist(File.concatenatepaths(topfolderpath, "index.multimovie"))
-
-			if processflag == True:
-
-				# READ IN SET INFORMATION # !!!!!!!!!!!!!!!!
-
-				for topitemname in topfilelist.keys():
-
-					if rootfilelist[rootitemname] == "Folder":
-
-						# Look in subfolder for files and process
-
-					else:
-
-						if multimovieflag == True:
-
-							# Process file
+	print "==========================================="
+	print "NFOs Created: ", nfocount
 
 
 
-	#GUI.quit()
 
+def processsubfolder(parentfolderpath, subfoldername, setname, nameprefix, nfocount):
 
+	newnfocount = nfocount
+	subfolderpath = File.concatenatepaths(parentfolderpath, subfoldername)
+	#print "==========================================="
+	#print subfolderpath
 
-def processsubfolder(folderpath, setname):
+	filelist = File.getfolderlisting(subfolderpath)
 
-	filelist = File.getfolderlisting(folderpath)
+	movielist = {}
 
-	multimovieflag = File.doesexist(File.concatenatepaths(folderpath, "index.multimovie"))
+	# Determine what the current set is
+	newsetname = IndexFile.determinemovieset(subfolderpath, setname)
 
+	if newsetname != "":
 
-	for itemname in filelist.keys():
+		newnameprefix = IndexFile.determinenameprefix(subfolderpath, nameprefix)
 
-		if filelist[itemname] == "Folder":
-			processsubfolder(File.concatenatepaths(folderpath, itemname), setname)
+		# Process Movies files if a multimovie folder
+		multimovieflag = IndexFile.determinefoldertype(subfolderpath)
+		if multimovieflag == True:
+			for itemname in filelist.keys():
+				if filelist[itemname] == "File":
+					if FileName.getfiletype(itemname) == "Movie":
+						sanitiseditemname = FileName.getsanitisedfilename(itemname)
+						if sanitiseditemname in movielist.keys():
+							print "     Duplicate movie name: ",sanitiseditemname , " ignored from ", itemname
+						else:
+							movielist[sanitiseditemname] = ""
+							#print "     Multi Movie:", itemname, " captured as ", sanitiseditemname
 
+		# Process single movie if at least one movie file present
 		else:
+			ismoviepresent = False
+			for itemname in filelist.keys():
+				if filelist[itemname] == "File":
+					if FileName.getfiletype(itemname) == "Movie":
+						ismoviepresent = True
+			if ismoviepresent == True:
+				movielist[subfoldername] = ""
+				#print "     Single Movie:", subfoldername, " assumed "
+			#else:
+				#print "     Folder contains no movies"
 
-			if multimovieflag == True:
 
+		# Process Images
+		for itemname in filelist.keys():
+			if filelist[itemname] == "File":
+				if FileName.getfiletype(itemname) == "Image":
+					sanitiseditemname = FileName.getsanitisedfilename(itemname)
+					if sanitiseditemname in movielist.keys():
+						movielist[FileName.getsanitisedfilename(itemname)] = itemname
+						#print "     Image:", itemname, " captured for ", sanitiseditemname
+					else:
+						print "     Ignored Image:", itemname
+
+
+		# Write NFOs
+		newnfocount = FileOutput.outputnfos(subfolderpath, movielist, newsetname, newnameprefix, newnfocount)
+
+
+		# Process subfolders
+		for itemname in filelist.keys():
+			if filelist[itemname] == "Folder":
+				newnfocount = processsubfolder(subfolderpath, itemname, newsetname, newnameprefix, newnfocount)
+
+
+	return newnfocount
