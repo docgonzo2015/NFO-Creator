@@ -1,24 +1,28 @@
 from common_components.fileprocessing_framework import fileprocessing_module as File
-from . import filename_functions as FileName
-from . import indexfile_functions as IndexFile
+from . import filename_methods as FileName
+from . import indexfile_methods as IndexFile
 from . import nfooutput_methods as FileOutput
 
 
 def runapplication(rootfolderpath):
 
 
+	print "==========================================="
+
 	rootfilelist = File.getfolderlisting(rootfolderpath)
 
 	nfocount = 0
 
-	for rootitemname in rootfilelist.keys():
+	rootitemnamelist = rootfilelist.keys()
+	rootitemnamelist.sort()
+	for rootitemname in rootitemnamelist:
 
 		if rootfilelist[rootitemname] == "Folder":
 			nfocount = processsubfolder(rootfolderpath, rootitemname, "", "", nfocount)
 
 	print "==========================================="
-	print "NFOs Created: ", nfocount
-
+	print str(nfocount) + " NFOs processed"
+	print "==========================================="
 
 
 
@@ -29,7 +33,9 @@ def processsubfolder(parentfolderpath, subfoldername, setname, nameprefix, nfoco
 	#print "==========================================="
 	#print subfolderpath
 
-	filelist = File.getfolderlisting(subfolderpath)
+	directorylisting = File.getfolderlisting(subfolderpath)
+	itemnamelist = directorylisting.keys()
+	itemnamelist.sort()
 
 	movielist = {}
 
@@ -43,8 +49,8 @@ def processsubfolder(parentfolderpath, subfoldername, setname, nameprefix, nfoco
 		# Process Movies files if a multimovie folder
 		multimovieflag = IndexFile.determinefoldertype(subfolderpath)
 		if multimovieflag == True:
-			for itemname in filelist.keys():
-				if filelist[itemname] == "File":
+			for itemname in itemnamelist:
+				if directorylisting[itemname] == "File":
 					if FileName.getfiletype(itemname) == "Movie":
 						sanitiseditemname = FileName.getsanitisedfilename(itemname)
 						if sanitiseditemname in movielist.keys():
@@ -56,8 +62,8 @@ def processsubfolder(parentfolderpath, subfoldername, setname, nameprefix, nfoco
 		# Process single movie if at least one movie file present
 		else:
 			ismoviepresent = False
-			for itemname in filelist.keys():
-				if filelist[itemname] == "File":
+			for itemname in itemnamelist:
+				if directorylisting[itemname] == "File":
 					if FileName.getfiletype(itemname) == "Movie":
 						ismoviepresent = True
 			if ismoviepresent == True:
@@ -68,15 +74,15 @@ def processsubfolder(parentfolderpath, subfoldername, setname, nameprefix, nfoco
 
 
 		# Process Images
-		for itemname in filelist.keys():
-			if filelist[itemname] == "File":
+		for itemname in itemnamelist:
+			if directorylisting[itemname] == "File":
 				if FileName.getfiletype(itemname) == "Image":
 					sanitiseditemname = FileName.getsanitisedfilename(itemname)
 					if sanitiseditemname in movielist.keys():
 						movielist[FileName.getsanitisedfilename(itemname)] = itemname
 						#print "     Image:", itemname, " captured for ", sanitiseditemname
-					else:
-						print "     Ignored Image:", itemname
+					#else:
+						#print "     Ignored Image:", itemname
 
 
 		# Write NFOs
@@ -84,8 +90,8 @@ def processsubfolder(parentfolderpath, subfoldername, setname, nameprefix, nfoco
 
 
 		# Process subfolders
-		for itemname in filelist.keys():
-			if filelist[itemname] == "Folder":
+		for itemname in itemnamelist:
+			if directorylisting[itemname] == "Folder":
 				newnfocount = processsubfolder(subfolderpath, itemname, newsetname, newnameprefix, newnfocount)
 
 
