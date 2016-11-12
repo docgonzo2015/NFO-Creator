@@ -5,14 +5,12 @@ from common_components.fileprocessing_framework import fileprocessing_module as 
 def outputnfos(folderpath, movielist, setname, nameprefix, nfocount):
 
     newnfocount = nfocount
-    for moviename in movielist.keys():
+    movienamelist = movielist.keys()
+    movienamelist.sort()
+    for moviename in movienamelist:
         newnfocount = newnfocount + 1
         filepath = createfilepath(folderpath, moviename)
         fileoutput = createnfocontent(nameprefix + moviename, movielist[moviename], setname)
-        if movielist[moviename] != "":
-            messagesuffix = ""
-        else:
-            messagesuffix = "..................................................[No Image]"
 
         decision = checkexistingnfo(folderpath, moviename, setname, nameprefix, movielist[moviename])
 
@@ -24,7 +22,16 @@ def outputnfos(folderpath, movielist, setname, nameprefix, nfocount):
             messageprefix = "     Updating existing file "
         else:
             messageprefix = "    Unknown action for file "
-        print messageprefix + str(nfocount).zfill(4) + ": " + filepath + messagesuffix
+
+        outputmessage = messageprefix + str(nfocount).zfill(4) + ": " + filepath
+
+        if movielist[moviename] == "":
+            outputmessage = outputmessage + ".........................................................................."
+            outputmessage = outputmessage + ".........................................................................."
+            outputmessage = outputmessage[:150] + "[No Image]"
+
+
+        print outputmessage
         if (decision == "Out Of Date") or (decision == "Missing"):
             File.writetodisk(filepath, fileoutput)
 
