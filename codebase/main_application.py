@@ -1,4 +1,4 @@
-from common_components.fileprocessing_framework import fileprocessing_module as File
+from .common_components.fileprocessing_framework import fileprocessing_module as File
 from . import filename_methods as FileName
 from . import indexfile_methods as IndexFile
 from . import nfooutput_methods as FileOutput
