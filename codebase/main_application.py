@@ -7,7 +7,7 @@ from . import nfooutput_methods as FileOutput
 def runapplication(rootfolderpath):
 
 
-	print "==========================================="
+	print("===========================================")
 
 	rootfilelist = File.getfolderlisting(rootfolderpath)
 
@@ -20,9 +20,9 @@ def runapplication(rootfolderpath):
 		if rootfilelist[rootitemname] == "Folder":
 			nfocount = processsubfolder(rootfolderpath, rootitemname, "", "", nfocount)
 
-	print "==========================================="
-	print str(nfocount) + " NFOs processed"
-	print "==========================================="
+	print("===========================================")
+	print(str(nfocount) + " NFOs processed")
+	print("===========================================")
 
 
 
@@ -30,8 +30,8 @@ def processsubfolder(parentfolderpath, subfoldername, setname, nameprefix, nfoco
 
 	newnfocount = nfocount
 	subfolderpath = File.concatenatepaths(parentfolderpath, subfoldername)
-	#print "==========================================="
-	#print subfolderpath
+	#print("===========================================")
+	#print(subfolderpath)
 
 	directorylisting = File.getfolderlisting(subfolderpath)
 	itemnamelist = directorylisting.keys()
@@ -54,10 +54,10 @@ def processsubfolder(parentfolderpath, subfoldername, setname, nameprefix, nfoco
 					if FileName.getfiletype(itemname) == "Movie":
 						sanitiseditemname = FileName.getsanitisedfilename(itemname)
 						if sanitiseditemname in movielist.keys():
-							print "     Duplicate movie name: ",sanitiseditemname , " ignored from ", itemname
+							print("     Duplicate movie name: ",sanitiseditemname , " ignored from ", itemname)
 						else:
 							movielist[sanitiseditemname] = ""
-							#print "     Multi Movie:", itemname, " captured as ", sanitiseditemname
+							#print("     Multi Movie:", itemname, " captured as ", sanitiseditemname)
 
 		# Process single movie if at least one movie file present
 		else:
@@ -68,9 +68,9 @@ def processsubfolder(parentfolderpath, subfoldername, setname, nameprefix, nfoco
 						ismoviepresent = True
 			if ismoviepresent == True:
 				movielist[subfoldername] = ""
-				#print "     Single Movie:", subfoldername, " assumed "
+				#print("     Single Movie:", subfoldername, " assumed ")
 			#else:
-				#print "     Folder contains no movies"
+				#print("     Folder contains no movies")
 
 
 		# Process Images
@@ -80,9 +80,9 @@ def processsubfolder(parentfolderpath, subfoldername, setname, nameprefix, nfoco
 					sanitiseditemname = FileName.getsanitisedfilename(itemname)
 					if sanitiseditemname in movielist.keys():
 						movielist[FileName.getsanitisedfilename(itemname)] = itemname
-						#print "     Image:", itemname, " captured for ", sanitiseditemname
+						#print("     Image:", itemname, " captured for ", sanitiseditemname)
 					#else:
-						#print "     Ignored Image:", itemname
+						#print("     Ignored Image:", itemname)
 
 
 		# Write NFOs

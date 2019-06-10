@@ -1,7 +1,7 @@
-from codebase import main_application as CrystalDefenders
+from codebase import main_application as NFOCreator
 
 
 
 print "Application Started"
-CrystalDefenders.runapplication("V:\\")
+NFOCreator.runapplication("~/Home-Network/Videos")
 print "Application Ended"

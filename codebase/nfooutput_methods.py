@@ -31,7 +31,7 @@ def outputnfos(folderpath, movielist, setname, nameprefix, nfocount):
             outputmessage = outputmessage[:150] + "[No Image]"
 
 
-        print outputmessage
+        print(outputmessage)
         if (decision == "Out Of Date") or (decision == "Missing"):
             File.writetodisk(filepath, fileoutput)
 
