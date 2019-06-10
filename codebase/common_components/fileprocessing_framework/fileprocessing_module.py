@@ -42,7 +42,6 @@ def getfolderlisting(folderpath):
 
 	try:
 		listing = OperatingSystem.listdir(folderpath)
-
 		for listitem in listing:
 			fullitempath = OperatingSystem.path.join(folderpath, listitem)
 			if OperatingSystem.path.isfile(fullitempath) == True:

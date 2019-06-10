@@ -10,12 +10,9 @@ def runapplication(rootfolderpath):
 	print("===========================================")
 
 	rootfilelist = File.getfolderlisting(rootfolderpath)
-
 	nfocount = 0
 
-	rootitemnamelist = rootfilelist.keys()
-	rootitemnamelist.sort()
-	for rootitemname in rootitemnamelist:
+	for rootitemname in sorted(rootfilelist.keys()):
 
 		if rootfilelist[rootitemname] == "Folder":
 			nfocount = processsubfolder(rootfolderpath, rootitemname, "", "", nfocount)
@@ -34,8 +31,6 @@ def processsubfolder(parentfolderpath, subfoldername, setname, nameprefix, nfoco
 	#print(subfolderpath)
 
 	directorylisting = File.getfolderlisting(subfolderpath)
-	itemnamelist = directorylisting.keys()
-	itemnamelist.sort()
 
 	movielist = {}
 
@@ -49,7 +44,7 @@ def processsubfolder(parentfolderpath, subfoldername, setname, nameprefix, nfoco
 		# Process Movies files if a multimovie folder
 		multimovieflag = IndexFile.determinefoldertype(subfolderpath)
 		if multimovieflag == True:
-			for itemname in itemnamelist:
+			for itemname in sorted(directorylisting.keys()):
 				if directorylisting[itemname] == "File":
 					if FileName.getfiletype(itemname) == "Movie":
 						sanitiseditemname = FileName.getsanitisedfilename(itemname)
@@ -62,7 +57,7 @@ def processsubfolder(parentfolderpath, subfoldername, setname, nameprefix, nfoco
 		# Process single movie if at least one movie file present
 		else:
 			ismoviepresent = False
-			for itemname in itemnamelist:
+			for itemname in sorted(directorylisting.keys()):
 				if directorylisting[itemname] == "File":
 					if FileName.getfiletype(itemname) == "Movie":
 						ismoviepresent = True
@@ -74,7 +69,7 @@ def processsubfolder(parentfolderpath, subfoldername, setname, nameprefix, nfoco
 
 
 		# Process Images
-		for itemname in itemnamelist:
+		for itemname in sorted(directorylisting.keys()):
 			if directorylisting[itemname] == "File":
 				if FileName.getfiletype(itemname) == "Image":
 					sanitiseditemname = FileName.getsanitisedfilename(itemname)
@@ -90,7 +85,7 @@ def processsubfolder(parentfolderpath, subfoldername, setname, nameprefix, nfoco
 
 
 		# Process subfolders
-		for itemname in itemnamelist:
+		for itemname in sorted(directorylisting.keys()):
 			if directorylisting[itemname] == "Folder":
 				newnfocount = processsubfolder(subfolderpath, itemname, newsetname, newnameprefix, newnfocount)
 

@@ -5,9 +5,8 @@ from .common_components.fileprocessing_framework import fileprocessing_module as
 def outputnfos(folderpath, movielist, setname, nameprefix, nfocount):
 
     newnfocount = nfocount
-    movienamelist = movielist.keys()
-    movienamelist.sort()
-    for moviename in movienamelist:
+
+    for moviename in sorted(movielist.keys()):
         newnfocount = newnfocount + 1
         filepath = createfilepath(folderpath, moviename)
         fileoutput = createnfocontent(nameprefix + moviename, movielist[moviename], setname)
